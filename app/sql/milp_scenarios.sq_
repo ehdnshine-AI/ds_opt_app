@@ -1,0 +1,33 @@
+-- name: select_milp_scenario
+-- Fetch MILP scenario metadata by name.
+SELECT milp_scenario_id, scenario_name, sense, problem_type, var_count
+FROM public.opt_milp_scenarios
+WHERE scenario_name = :scenario_name;
+
+-- name: select_milp_variables
+-- Fetch variable definitions for a MILP scenario.
+SELECT var_index, var_name, var_cat, low_bound, up_bound
+FROM public.opt_milp_variables
+WHERE milp_scenario_id = :milp_scenario_id
+ORDER BY var_index;
+
+-- name: select_milp_objective_coeffs
+-- Fetch objective coefficients for a MILP scenario.
+SELECT var_index, coeff
+FROM public.opt_milp_objective_coeffs
+WHERE milp_scenario_id = :milp_scenario_id
+ORDER BY var_index;
+
+-- name: select_milp_constraints
+-- Fetch constraint headers for a MILP scenario.
+SELECT constraint_index, sense, rhs
+FROM public.opt_milp_constraints
+WHERE milp_scenario_id = :milp_scenario_id
+ORDER BY constraint_index;
+
+-- name: select_milp_constraint_coeffs
+-- Fetch sparse matrix coefficients for scenario constraints.
+SELECT constraint_index, var_index, coeff
+FROM public.opt_milp_constraint_coeffs
+WHERE milp_scenario_id = :milp_scenario_id
+ORDER BY constraint_index, var_index;

@@ -1,0 +1,15 @@
+-- name: select_scenario_product_params
+-- Fetch product-level planning parameters for a scenario.
+SELECT
+  p.product_code,
+  spp.unit_profit,
+  spp.inventory_cost,
+  spp.backorder_penalty,
+  spp.initial_inventory
+FROM public.opt_planning_scenarios s
+JOIN public.opt_scenario_product_params spp
+  ON spp.scenario_id = s.scenario_id
+JOIN public.opt_products p
+  ON p.product_id = spp.product_id
+WHERE s.scenario_name = :scenario_name
+ORDER BY p.product_code;

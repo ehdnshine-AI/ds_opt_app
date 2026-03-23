@@ -1,0 +1,338 @@
+INFO:     Started server process [34650]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-02-24 16:12:12,715 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:56932 - "GET /healthz HTTP/1.1" 200 OK
+2026-02-24 16:42:31,210 INFO solve.start request_id=bdb80643-616f-44e7-9c98-d4f1db170755 solver=CBC sense=max n=4
+2026-02-24 16:42:31,215 INFO solve.done request_id=bdb80643-616f-44e7-9c98-d4f1db170755 status=Optimal objective=2150.0 duration_ms=4
+2026-02-24 16:42:31,216 INFO request method=POST path=/solve status=200 duration_ms=8 query={} body={'sense': 'max', 'objective': [50.0, 40.0, -200.0, -150.0], 'constraints': [{'coeffs': [2.0, 1.0, -40.0, -30.0], 'sense': '<=', 'rhs': 0.0}, {'coeffs': [0.0, 0.0, -1.0, 1.0], 'sense': '<=', 'rhs': 0.0}], 'var_bounds': [{'low': 10, 'up': 1000000000}, {'low': 5, 'up': 1000000000}, {'low': 0, 'up': 1}, {'low': 0, 'up': 1}], 'var_cats': ['Integer', 'Integer', 'Integer', 'Integer'], 'solver': 'CBC', 'time_limit_sec': 10.0, 'request_id': 'bdb80643-616f-44e7-9c98-d4f1db170755', 'problem_type': 'MILP'}
+INFO:     127.0.0.1:33598 - "POST /solve HTTP/1.1" 200 OK
+2026-02-24 17:25:07,460 INFO solve.start request_id=0d19f45c-701d-46f3-9c28-0bf96ba66dc6 solver=CBC sense=max n=4
+2026-02-24 17:25:07,465 INFO solve.done request_id=0d19f45c-701d-46f3-9c28-0bf96ba66dc6 status=Optimal objective=2150.0 duration_ms=4
+2026-02-24 17:25:07,465 INFO request method=POST path=/solve status=200 duration_ms=6 query={} body={'sense': 'max', 'objective': [50.0, 40.0, -200.0, -150.0], 'constraints': [{'coeffs': [2.0, 1.0, -40.0, -30.0], 'sense': '<=', 'rhs': 0.0}, {'coeffs': [0.0, 0.0, -1.0, 1.0], 'sense': '<=', 'rhs': 0.0}], 'var_bounds': [{'low': 10, 'up': 1000000000}, {'low': 5, 'up': 1000000000}, {'low': 0, 'up': 1}, {'low': 0, 'up': 1}], 'var_cats': ['Integer', 'Integer', 'Integer', 'Integer'], 'solver': 'CBC', 'time_limit_sec': 10.0, 'request_id': '0d19f45c-701d-46f3-9c28-0bf96ba66dc6', 'problem_type': 'MILP'}
+INFO:     127.0.0.1:48606 - "POST /solve HTTP/1.1" 200 OK
+2026-03-03 09:58:19,988 INFO solve.start request_id=9eb250e0-0404-42c2-b176-823ddbaf8f5b solver=CBC sense=max n=4
+2026-03-03 09:58:19,992 INFO solve.done request_id=9eb250e0-0404-42c2-b176-823ddbaf8f5b status=Optimal objective=2150.0 duration_ms=3
+2026-03-03 09:58:19,993 INFO request method=POST path=/solve status=200 duration_ms=5 query={} body={'sense': 'max', 'objective': [50.0, 40.0, -200.0, -150.0], 'constraints': [{'coeffs': [2.0, 1.0, -40.0, -30.0], 'sense': '<=', 'rhs': 0.0}, {'coeffs': [0.0, 0.0, -1.0, 1.0], 'sense': '<=', 'rhs': 0.0}], 'var_bounds': [{'low': 10, 'up': 1000000000}, {'low': 5, 'up': 1000000000}, {'low': 0, 'up': 1}, {'low': 0, 'up': 1}], 'var_cats': ['Integer', 'Integer', 'Integer', 'Integer'], 'solver': 'CBC', 'time_limit_sec': 10.0, 'request_id': '9eb250e0-0404-42c2-b176-823ddbaf8f5b', 'problem_type': 'MILP'}
+INFO:     127.0.0.1:49240 - "POST /solve HTTP/1.1" 200 OK
+INFO:     Started server process [2193]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2193]
+INFO:     Started server process [2165]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2165]
+INFO:     Started server process [3210]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3210]
+INFO:     Started server process [3449]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3449]
+INFO:     Started server process [3197]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3197]
+INFO:     Started server process [3419]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-05 16:57:58,791 INFO solve.start request_id=2c789950-b2ad-400f-b7ed-a1887e0c5284 solver=CBC sense=max n=4
+2026-03-05 16:57:58,825 INFO solve.done request_id=2c789950-b2ad-400f-b7ed-a1887e0c5284 status=Optimal objective=2150.0 duration_ms=34
+2026-03-05 16:57:58,826 INFO request method=POST path=/solve status=200 duration_ms=39 query={} body={'sense': 'max', 'objective': [50.0, 40.0, -200.0, -150.0], 'constraints': [{'coeffs': [2.0, 1.0, -40.0, -30.0], 'sense': '<=', 'rhs': 0.0}, {'coeffs': [0.0, 0.0, -1.0, 1.0], 'sense': '<=', 'rhs': 0.0}], 'var_bounds': [{'low': 10, 'up': 1000000000}, {'low': 5, 'up': 1000000000}, {'low': 0, 'up': 1}, {'low': 0, 'up': 1}], 'var_cats': ['Integer', 'Integer', 'Integer', 'Integer'], 'solver': 'CBC', 'time_limit_sec': 10.0, 'request_id': '2c789950-b2ad-400f-b7ed-a1887e0c5284', 'problem_type': 'MILP'}
+INFO:     127.0.0.1:42268 - "POST /solve HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3419]
+INFO:     Started server process [3293]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-06 09:34:07,319 INFO solve.start request_id=91514107-7bec-46c5-9700-3bef61274c1d solver=CBC sense=max n=4
+2026-03-06 09:34:07,372 INFO solve.done request_id=91514107-7bec-46c5-9700-3bef61274c1d status=Optimal objective=2150.0 duration_ms=51
+2026-03-06 09:34:07,373 INFO request method=POST path=/solve status=200 duration_ms=56 query={} body={'sense': 'max', 'objective': [50.0, 40.0, -200.0, -150.0], 'constraints': [{'coeffs': [2.0, 1.0, -40.0, -30.0], 'sense': '<=', 'rhs': 0.0}, {'coeffs': [0.0, 0.0, -1.0, 1.0], 'sense': '<=', 'rhs': 0.0}], 'var_bounds': [{'low': 10, 'up': 1000000000}, {'low': 5, 'up': 1000000000}, {'low': 0, 'up': 1}, {'low': 0, 'up': 1}], 'var_cats': ['Integer', 'Integer', 'Integer', 'Integer'], 'solver': 'CBC', 'time_limit_sec': 10.0, 'request_id': '91514107-7bec-46c5-9700-3bef61274c1d', 'problem_type': 'MILP'}
+INFO:     127.0.0.1:40520 - "POST /solve HTTP/1.1" 200 OK
+2026-03-06 09:37:54,735 INFO solve.start request_id=09051c4f-f15e-4871-93c1-59de26fed468 solver=CBC sense=max n=4
+2026-03-06 09:37:54,743 INFO solve.done request_id=09051c4f-f15e-4871-93c1-59de26fed468 status=Optimal objective=2150.0 duration_ms=7
+2026-03-06 09:37:54,744 INFO request method=POST path=/solve status=200 duration_ms=11 query={} body={'sense': 'max', 'objective': [50.0, 40.0, -200.0, -150.0], 'constraints': [{'coeffs': [2.0, 1.0, -40.0, -30.0], 'sense': '<=', 'rhs': 0.0}, {'coeffs': [0.0, 0.0, -1.0, 1.0], 'sense': '<=', 'rhs': 0.0}], 'var_bounds': [{'low': 10, 'up': 1000000000}, {'low': 5, 'up': 1000000000}, {'low': 0, 'up': 1}, {'low': 0, 'up': 1}], 'var_cats': ['Integer', 'Integer', 'Integer', 'Integer'], 'solver': 'CBC', 'time_limit_sec': 10.0, 'request_id': '09051c4f-f15e-4871-93c1-59de26fed468', 'problem_type': 'MILP'}
+INFO:     127.0.0.1:44066 - "POST /solve HTTP/1.1" 200 OK
+2026-03-06 09:50:51,121 INFO solve.start request_id=4beb05e0-1e0c-48bc-8eea-2794599945c4 solver=CBC sense=max n=4
+2026-03-06 09:50:51,124 INFO solve.done request_id=4beb05e0-1e0c-48bc-8eea-2794599945c4 status=Optimal objective=2150.0 duration_ms=3
+2026-03-06 09:50:51,125 INFO request method=POST path=/solve status=200 duration_ms=4 query={} body={'sense': 'max', 'objective': [50.0, 40.0, -200.0, -150.0], 'constraints': [{'coeffs': [2.0, 1.0, -40.0, -30.0], 'sense': '<=', 'rhs': 0.0}, {'coeffs': [0.0, 0.0, -1.0, 1.0], 'sense': '<=', 'rhs': 0.0}], 'var_bounds': [{'low': 10, 'up': 1000000000}, {'low': 5, 'up': 1000000000}, {'low': 0, 'up': 1}, {'low': 0, 'up': 1}], 'var_cats': ['Integer', 'Integer', 'Integer', 'Integer'], 'solver': 'CBC', 'time_limit_sec': 10.0, 'request_id': '4beb05e0-1e0c-48bc-8eea-2794599945c4', 'problem_type': 'MILP'}
+INFO:     127.0.0.1:57938 - "POST /solve HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3293]
+INFO:     Started server process [2884]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2884]
+INFO:     Started server process [3763]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+/home/dnshine/sources/opt_app/.venv/bin/python: No module named uvicorn
+INFO:     Started server process [5530]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [5530]
+INFO:     Started server process [6789]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [6789]
+INFO:     Started server process [6936]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-09 12:33:46,207 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:58956 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [6936]
+INFO:     Started server process [7441]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-09 14:04:29,111 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:48490 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [7441]
+INFO:     Started server process [7629]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-09 14:08:12,853 INFO request method=GET path=/healthz status=200 duration_ms=0 query={} body=None
+INFO:     127.0.0.1:53714 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [7629]
+INFO:     Started server process [10430]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-10 11:17:02,200 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:50754 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [10430]
+INFO:     Started server process [11990]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-10 16:39:16,475 INFO request method=GET path=/healthz status=200 duration_ms=0 query={} body=None
+INFO:     127.0.0.1:54648 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [11990]
+INFO:     Started server process [12250]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-10 16:43:33,839 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:37872 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [12250]
+INFO:     Started server process [12829]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-10 16:59:49,523 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:37044 - "GET /healthz HTTP/1.1" 200 OK
+2026-03-10 17:07:03,698 INFO solve.start request_id=f2c0228c-0f20-423a-8b4f-a5501ab577c6 solver=CBC sense=max n=4
+2026-03-10 17:07:03,703 INFO solve.done request_id=f2c0228c-0f20-423a-8b4f-a5501ab577c6 status=Optimal objective=2150.0 duration_ms=4
+2026-03-10 17:07:03,704 INFO request method=POST path=/solve status=200 duration_ms=8 query={} body={'sense': 'max', 'objective': [50.0, 40.0, -200.0, -150.0], 'constraints': [{'coeffs': [2.0, 1.0, -40.0, -30.0], 'sense': '<=', 'rhs': 0.0}, {'coeffs': [0.0, 0.0, -1.0, 1.0], 'sense': '<=', 'rhs': 0.0}], 'var_bounds': [{'low': 10, 'up': 1000000000}, {'low': 5, 'up': 1000000000}, {'low': 0, 'up': 1}, {'low': 0, 'up': 1}], 'var_cats': ['Integer', 'Integer', 'Integer', 'Integer'], 'solver': 'CBC', 'time_limit_sec': 10.0, 'request_id': 'f2c0228c-0f20-423a-8b4f-a5501ab577c6', 'problem_type': 'MILP'}
+INFO:     127.0.0.1:51342 - "POST /solve HTTP/1.1" 200 OK
+2026-03-10 17:07:07,793 INFO solve.start request_id=d5d38835-9b33-4944-80ee-d9ac738a596d solver=CBC sense=max n=4
+2026-03-10 17:07:07,798 INFO solve.done request_id=d5d38835-9b33-4944-80ee-d9ac738a596d status=Optimal objective=2150.0 duration_ms=3
+2026-03-10 17:07:07,798 INFO request method=POST path=/solve status=200 duration_ms=6 query={} body={'sense': 'max', 'objective': [50.0, 40.0, -200.0, -150.0], 'constraints': [{'coeffs': [2.0, 1.0, -40.0, -30.0], 'sense': '<=', 'rhs': 0.0}, {'coeffs': [0.0, 0.0, -1.0, 1.0], 'sense': '<=', 'rhs': 0.0}], 'var_bounds': [{'low': 10, 'up': 1000000000}, {'low': 5, 'up': 1000000000}, {'low': 0, 'up': 1}, {'low': 0, 'up': 1}], 'var_cats': ['Integer', 'Integer', 'Integer', 'Integer'], 'solver': 'CBC', 'time_limit_sec': 10.0, 'request_id': 'd5d38835-9b33-4944-80ee-d9ac738a596d', 'problem_type': 'MILP'}
+INFO:     127.0.0.1:51350 - "POST /solve HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [12829]
+INFO:     Started server process [18481]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-16 09:34:32,045 INFO request method=GET path=/healthz status=200 duration_ms=0 query={} body=None
+INFO:     127.0.0.1:50348 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [18481]
+INFO:     Started server process [21254]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-19 00:21:03,662 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:39772 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [21254]
+2026-03-19 00:28:36,977 WARNING kafka logging disabled reason=kafka-python is required for Kafka logging
+INFO:     Started server process [21702]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-19 00:28:39,623 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:41758 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [21702]
+2026-03-19 00:33:56,067 WARNING kafka logging disabled reason=kafka-python is required for Kafka logging
+INFO:     Started server process [21879]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-19 00:33:58,750 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:56502 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [21879]
+2026-03-19 04:01:15,302 WARNING kafka logging disabled reason=kafka-python is required for Kafka logging
+INFO:     Started server process [23028]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [23028]
+2026-03-19 04:02:00,837 WARNING kafka logging disabled reason=kafka-python is required for Kafka logging
+INFO:     Started server process [23119]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-19 04:02:03,511 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:59594 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [23119]
+2026-03-19 04:02:29,297 WARNING kafka logging disabled reason=kafka-python is required for Kafka logging
+INFO:     Started server process [23231]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-19 04:02:31,953 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:48480 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [23231]
+2026-03-19 04:06:25,850 WARNING kafka logging disabled reason=kafka-python is required for Kafka logging
+INFO:     Started server process [23361]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-19 04:06:28,564 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:44878 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [23361]
+2026-03-19 04:35:01,554 INFO kafka logging enabled topic=pulp-solver-logs bootstrap_servers=['172.30.1.120:9094', '172.30.1.121:9094', '172.30.1.123:9094']
+INFO:     Started server process [23818]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-19 04:35:03,761 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:60964 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [23818]
+INFO:     Started server process [24273]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-19 05:21:59,303 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:36174 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [24273]
+INFO:     Started server process [24383]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-19 05:22:09,183 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:60882 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [24383]
+INFO:     Started server process [26262]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-20 02:09:55,138 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:60198 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [26262]
+INFO:     Started server process [6737]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-23 10:37:05,164 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:58362 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [6737]
+INFO:     Started server process [31112]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8101 (Press CTRL+C to quit)
+2026-03-23 12:58:18,385 INFO request method=GET path=/healthz status=200 duration_ms=1 query={} body=None
+INFO:     127.0.0.1:39800 - "GET /healthz HTTP/1.1" 200 OK

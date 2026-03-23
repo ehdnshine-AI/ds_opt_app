@@ -1,0 +1,14 @@
+-- name: insert_job
+-- Insert a completed job record.
+INSERT INTO public.opt_jobs(id, solver, status, objective, variable_names, variables, duration_ms)
+VALUES (:id, :solver, :status, :objective, :variable_names, :variables, :duration_ms);
+
+-- name: select_job
+-- Fetch a job record by request id.
+SELECT id, solver, status, objective, variable_names, variables, duration_ms
+FROM public.opt_jobs
+WHERE id = :id;
+
+-- name: delete_job
+-- Delete a job record by request id.
+DELETE FROM public.opt_jobs WHERE id = :id;

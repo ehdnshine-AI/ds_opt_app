@@ -1,0 +1,53 @@
+-- name: select_optimization_payload_by_scenario_latest
+-- Load latest payload for active scenario by scenario code or name.
+SELECT
+  s.scenario_id,
+  s.scenario_code,
+  s.scenario_name,
+  s.problem_type AS scenario_problem_type,
+  s.solver_name AS scenario_solver_name,
+  p.payload_id,
+  p.payload_version,
+  p.sense,
+  p.solver,
+  p.problem_type,
+  p.time_limit_sec,
+  p.payload_json
+FROM public.optimization_scenario s
+JOIN public.optimization_payload p
+  ON p.scenario_id = s.scenario_id
+WHERE s.is_active = TRUE
+  AND (s.scenario_code = :scenario_key OR s.scenario_name = :scenario_key)
+ORDER BY p.payload_version DESC, p.payload_id DESC
+LIMIT 1;
+
+-- name: select_optimization_payload_by_scenario_version
+-- Load payload for active scenario by explicit payload version.
+SELECT
+  s.scenario_id,
+  s.scenario_code,
+  s.scenario_name,
+  s.problem_type AS scenario_problem_type,
+  s.solver_name AS scenario_solver_name,
+  p.payload_id,
+  p.payload_version,
+  p.sense,
+  p.solver,
+  p.problem_type,
+  p.time_limit_sec,
+  p.payload_json
+FROM public.optimization_scenario s
+JOIN public.optimization_payload p
+  ON p.scenario_id = s.scenario_id
+WHERE s.is_active = TRUE
+  AND (s.scenario_code = :scenario_key OR s.scenario_name = :scenario_key)
+  AND p.payload_version = :payload_version
+LIMIT 1;
+
+-- name: select_optimization_var_index_map
+-- Load variable labels for a scenario payload.
+SELECT var_index, var_name_text
+FROM public.optimization_var_index_map
+WHERE scenario_id = :scenario_id
+  AND payload_version = :payload_version
+ORDER BY var_index;
