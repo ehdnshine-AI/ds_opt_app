@@ -1,0 +1,19 @@
+[Unit]
+Description=DS Opt FastAPI Service
+After=network.target
+
+[Service]
+Type=simple
+User=__APP_USER__
+Group=__APP_GROUP__
+WorkingDirectory=__APP_DIR__
+EnvironmentFile=__ENV_DIR__/app.env
+ExecStart=__VENV_DIR__/bin/python -m uvicorn app.api.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=3
+StandardOutput=append:__LOG_DIR__/ds-opt-api.out.log
+StandardError=append:__LOG_DIR__/ds-opt-api.err.log
+
+[Install]
+WantedBy=multi-user.target
+

@@ -62,6 +62,7 @@ scripts/
 tests/
 docs/
 install.script
+install.windows.ps1
 requirements.txt
 ```
 
@@ -98,6 +99,12 @@ pip install -r requirements.txt
 ./install.script install
 ```
 
+Windows PowerShell:
+
+```powershell
+.\install.windows.ps1 install
+```
+
 ## 실행
 
 ### 1. Solver Connector 실행
@@ -130,6 +137,8 @@ uvicorn app.api.main:app --host 0.0.0.0 --port 8000
 
 [install.script](/home/dnshine/sources/opt_app/install.script)는 로컬 백그라운드 실행용 래퍼입니다.
 
+Windows에서는 [install.windows.ps1](/home/dnshine/sources/opt_app/install.windows.ps1)를 사용하면 같은 명령 흐름으로 실행할 수 있습니다.
+
 ```bash
 ./install.script start-solvers
 ./install.script start-api
@@ -140,7 +149,21 @@ uvicorn app.api.main:app --host 0.0.0.0 --port 8000
 ./install.script deploy
 ```
 
+```powershell
+.\install.windows.ps1 start-solvers
+.\install.windows.ps1 start-api
+.\install.windows.ps1 start-all
+.\install.windows.ps1 status
+.\install.windows.ps1 stop-all
+.\install.windows.ps1 restart-all
+.\install.windows.ps1 deploy
+```
+
 현재 스크립트는 CBC, HiGHS, API를 실행합니다. CPLEX 프로세스는 자동 기동 대상에 포함되어 있지 않습니다.
+
+## Ubuntu 22 배포 템플릿
+
+`nginx + tomcat + uvicorn` 기준의 Ubuntu 22 배포 템플릿은 [tomcat/README.md](/d:/workspace/sources/ds_opt_app/tomcat/README.md)에 정리되어 있습니다.
 
 ## 환경 변수
 
