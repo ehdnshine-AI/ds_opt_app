@@ -1,0 +1,74 @@
+name: ds-opt-app
+
+x-app-base: &app-base
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile
+  image: ds-opt-app:local
+  init: true
+  restart: unless-stopped
+  volumes:
+    - pulp_logs:/app/logs
+
+services:
+  solver-cbc:
+    <<: *app-base
+    command: ["connector"]
+    environment:
+      SOLVER_NAME: CBC
+      PULP_LOG_DIR: /app/logs
+    expose:
+      - "8000"
+
+  solver-highs:
+    <<: *app-base
+    command: ["connector"]
+    environment:
+      SOLVER_NAME: HIGHS
+      HIGHS_THREADS: ${HIGHS_THREADS:-4}
+      OMP_NUM_THREADS: ${OMP_NUM_THREADS:-4}
+      PULP_LOG_DIR: /app/logs
+    expose:
+      - "8000"
+
+  api:
+    <<: *app-base
+    command: ["api"]
+    depends_on:
+      solver-cbc:
+        condition: service_healthy
+      solver-highs:
+        condition: service_healthy
+    environment:
+      CBC_SOLVER_URL: http://solver-cbc:8000/solve
+      HIGHS_SOLVER_URL: http://solver-highs:8000/solve
+      CPLEX_SOLVER_URL: ${CPLEX_SOLVER_URL:-}
+      DATABASE_URL: ${DATABASE_URL:-}
+      SOLVER_REQUEST_TIMEOUT: ${SOLVER_REQUEST_TIMEOUT:-30}
+      PULP_LOG_DIR: /app/logs
+    ports:
+      - "${API_PORT:-8000}:8000"
+
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["db"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ds_opt_app}
+      POSTGRES_USER: ${POSTGRES_USER:-dsopt}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dsopt123}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../scripts/create_tables.sql:/docker-entrypoint-initdb.d/01-create_tables.sql:ro
+      - ../scripts/data_insert.sql:/docker-entrypoint-initdb.d/02-data_insert.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pulp_logs:
+  postgres_data:

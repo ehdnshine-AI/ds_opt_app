@@ -1,0 +1,15 @@
+.git
+.venv
+.run
+logs
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.idea/
+.vscode/
+tests/
+docs/
+tomcat/
+docker/.env
