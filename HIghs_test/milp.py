@@ -36,7 +36,7 @@ highs.setMaximize()
 highs.setOptionValue("threads", 8)
 highs.setOptionValue("time_limit", 6000)
 highs.setOptionValue("mip_rel_gap", 0.1)
-highs.setOptionValue("presolve", "off")
+highs.setOptionValue("presolve", "on")
 
 # =========================
 # 변수 정의

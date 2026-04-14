@@ -2,6 +2,7 @@
 uvicorn[standard]==0.30.6
 pulp[highs]==2.8.0
 highspy==1.7.2
+gurobipy==12.0.1
 SQLAlchemy==2.0.36
 psycopg[binary]==3.2.3
 psycopg2-binary==2.9.9
