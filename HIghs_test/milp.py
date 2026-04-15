@@ -10,8 +10,8 @@ from highspy import Highs
 # ── 설정 ───────────────────────────────────────
 np.random.seed(42)
 
-N_PRODUCTS = 3000
-N_CONSTRAINTS = 2000
+N_PRODUCTS = 200
+N_CONSTRAINTS = 300
 
 W1 = 0.7
 W2 = 0.3

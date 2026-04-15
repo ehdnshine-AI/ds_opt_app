@@ -61,8 +61,9 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ../scripts/create_tables.sql:/docker-entrypoint-initdb.d/01-create_tables.sql:ro
-      - ../scripts/data_insert.sql:/docker-entrypoint-initdb.d/02-data_insert.sql:ro
+      - ../scripts/00.init.sql:/docker-entrypoint-initdb.d/00.init.sql:ro
+      - ../scripts/01.create_tables.sql:/docker-entrypoint-initdb.d/01-create_tables.sql:ro
+      - ../scripts/02.data_insert.sql:/docker-entrypoint-initdb.d/02-data_insert.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s

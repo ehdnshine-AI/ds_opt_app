@@ -1,0 +1,19 @@
+-- 새로운 사용자 생성
+CREATE USER mydata WITH PASSWORD 'mydata123';
+
+-- 스키마 생성 (소유자를 myuser로 지정)
+CREATE SCHEMA mydata AUTHORIZATION mydata;
+
+-- 스키마 권한 부여
+GRANT ALL PRIVILEGES ON SCHEMA mydata TO mydata;
+
+-- 기존 테이블/시퀀스 권한 부여
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA mydata TO mydata;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA mydata TO mydata;
+
+-- 앞으로 생성될 객체에도 자동 권한 부여
+ALTER DEFAULT PRIVILEGES IN SCHEMA mydata
+GRANT ALL PRIVILEGES ON TABLES TO mydata;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA mydata
+GRANT ALL PRIVILEGES ON SEQUENCES TO mydata;
