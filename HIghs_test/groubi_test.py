@@ -1,8 +1,11 @@
 import argparse
+import json
 import sys
 import time
+from pathlib import Path
 
 import numpy as np
+from param_gen import PAYLOAD_OUTPUT_PATH, load_problem_data
 
 try:
     import gurobipy as gp
@@ -12,46 +15,39 @@ except ImportError as exc:
     raise SystemExit(1) from exc
 
 
-np.random.seed(42)
-
-DEFAULT_PRODUCTS = 300
-DEFAULT_CONSTRAINTS = 200
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_INPUT = PAYLOAD_OUTPUT_PATH
+DEFAULT_OUTPUT = BASE_DIR / "groubi.result.json"
 SIZE_LIMITED_MAX_PRODUCTS = 1000
 SIZE_LIMITED_MAX_CONSTRAINTS = 1000
 
-W1 = 0.7
-W2 = 0.3
 
-
-def build_data(n_products: int, n_constraints: int):
-    profit = np.random.uniform(10, 100, n_products)
-    setup = np.random.uniform(50, 500, n_products)
-    cap = np.random.uniform(10, 50, n_products)
-
-    A = np.random.uniform(0, 1, (n_constraints, n_products))
-    b = A.mean(axis=1) * n_products * 0.3
-
-    scale_profit = profit.sum() * cap.mean()
-    scale_setup = setup.sum()
-
-    return profit, setup, cap, A, b, scale_profit, scale_setup
+def load_problem(input_path: Path) -> dict:
+    return load_problem_data(input_path)
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--products", type=int, default=DEFAULT_PRODUCTS)
-    parser.add_argument("--constraints", type=int, default=DEFAULT_CONSTRAINTS)
+    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    n_products = args.products
-    n_constraints = args.constraints
+    problem = load_problem(args.input)
 
-    profit, setup, cap, A, b, scale_profit, scale_setup = build_data(
-        n_products, n_constraints
-    )
+    n_products = problem["n_products"]
+    n_constraints = problem["n_constraints"]
+    profit = problem["profit"]
+    setup = problem["setup"]
+    cap = problem["cap"]
+    A = problem["A"]
+    b = problem["b"]
+    scale_profit = problem["scale_profit"]
+    scale_setup = problem["scale_setup"]
+    w1 = float(problem["weights"]["w1"])
+    w2 = float(problem["weights"]["w2"])
 
     model = gp.Model("production_milp")
     model.ModelSense = GRB.MAXIMIZE
@@ -77,8 +73,8 @@ def main() -> int:
     )
 
     model.setObjective(
-        gp.quicksum((W1 * profit[i] / scale_profit) * x[i] for i in range(n_products))
-        - gp.quicksum((W2 * setup[i] / scale_setup) * y[i] for i in range(n_products))
+        gp.quicksum((w1 * profit[i] / scale_profit) * x[i] for i in range(n_products))
+        - gp.quicksum((w2 * setup[i] / scale_setup) * y[i] for i in range(n_products))
     )
 
     for j in range(n_constraints):
@@ -101,21 +97,11 @@ def main() -> int:
     except gp.GurobiError as exc:
         if "size-limited license" in str(exc).lower():
             print("\nGurobi restricted license limit was exceeded.")
-            print(
-                "The pip license supports at most 2000 variables and 2000 linear constraints."
-            )
-            print(
-                "This model uses "
-                f"{total_vars} variables and {total_constraints} constraints."
-            )
-            print(
-                "Run with a smaller model, for example:\n"
-                "python3 HIghs_test/groubi_test.py --products 1000 --constraints 1000"
-            )
+            print("The pip license supports at most 2000 variables and 2000 linear constraints.")
+            print(f"This model uses {total_vars} variables and {total_constraints} constraints.")
             print(
                 "For this model family, the restricted license-safe upper bound is "
-                f"--products <= {SIZE_LIMITED_MAX_PRODUCTS} and "
-                f"--constraints <= {SIZE_LIMITED_MAX_CONSTRAINTS}."
+                f"products <= {SIZE_LIMITED_MAX_PRODUCTS} and constraints <= {SIZE_LIMITED_MAX_CONSTRAINTS}."
             )
             return 2
         raise
@@ -144,11 +130,11 @@ def main() -> int:
     obj_value = float(model.ObjVal)
 
     print(f"\n{'=' * 50}")
-    print(f"풀이 시간        : {elapsed:.2f}초")
-    print(f"생산 제품 수      : {n_active} / {n_products}")
-    print(f"총 이익         : {total_profit:,.0f}")
-    print(f"총 셋업비용       : {total_setup:,.0f}")
-    print(f"Objective       : {obj_value:.6f}")
+    print(f"Elapsed sec      : {elapsed:.2f}")
+    print(f"Active products  : {n_active} / {n_products}")
+    print(f"Total profit     : {total_profit:,.0f}")
+    print(f"Total setup cost : {total_setup:,.0f}")
+    print(f"Objective        : {obj_value:.6f}")
     print(f"{'=' * 50}")
 
     results = [
@@ -158,11 +144,36 @@ def main() -> int:
     ]
     results.sort(key=lambda row: row[1] * row[2], reverse=True)
 
-    print("\n[ 이익 상위 10개 제품 ]")
-    print(f"{'제품':>6} {'생산량':>8} {'단위이익':>8} {'셋업비':>8} {'총이익':>10}")
+    print("\n[ Top 10 products by total profit ]")
+    print(f"{'Prod':>6} {'Qty':>8} {'Profit':>10} {'Setup':>10} {'Total':>12}")
 
     for i, xi, pi, si in results[:10]:
-        print(f" {i:>4}  {xi:>6.1f}  {pi:>6.1f}  {si:>6.1f}  {pi * xi:>8.0f}")
+        print(f" {i:>4}  {xi:>6.1f}  {pi:>8.1f}  {si:>8.1f}  {pi * xi:>10.0f}")
+
+    result_payload = {
+        "input_file": str(args.input),
+        "status": int(model.Status),
+        "status_name": str(model.Status),
+        "elapsed_sec": elapsed,
+        "objective_value": obj_value,
+        "n_active": n_active,
+        "total_profit": total_profit,
+        "total_setup": total_setup,
+        "x_vals": x_vals.tolist(),
+        "y_vals": y_vals.tolist(),
+        "top_results": [
+            {
+                "product_index": int(i),
+                "production": float(xi),
+                "unit_profit": float(pi),
+                "setup_cost": float(si),
+                "total_profit": float(pi * xi),
+            }
+            for i, xi, pi, si in results[:10]
+        ],
+    }
+    args.output.write_text(json.dumps(result_payload, indent=2), encoding="utf-8")
+    print(f"\nResult JSON written to: {args.output}")
 
     return 0
 

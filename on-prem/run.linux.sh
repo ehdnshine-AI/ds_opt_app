@@ -1,0 +1,340 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ON_PREM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$ON_PREM_DIR/.." && pwd)"
+
+ENV_FILE="${ENV_FILE:-$ON_PREM_DIR/.env}"
+POSTGRES_COMPOSE_FILE="${POSTGRES_COMPOSE_FILE:-$ON_PREM_DIR/postgres.compose.yml}"
+
+if [[ -f "$ENV_FILE" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+  set +a
+fi
+
+cd "$REPO_ROOT"
+
+VENV_DIR="${VENV_DIR:-$REPO_ROOT/.venv}"
+PYTHON_BIN="${PYTHON_BIN:-$VENV_DIR/bin/python}"
+PIP_BIN="${PIP_BIN:-$VENV_DIR/bin/pip}"
+
+RUN_DIR="${RUN_DIR:-$ON_PREM_DIR/.run}"
+LOG_DIR="${LOG_DIR:-$ON_PREM_DIR/logs}"
+mkdir -p "$RUN_DIR" "$LOG_DIR"
+
+CBC_HOST="${CBC_HOST:-0.0.0.0}"
+CBC_PORT="${CBC_PORT:-8101}"
+HIGHS_HOST="${HIGHS_HOST:-0.0.0.0}"
+HIGHS_PORT="${HIGHS_PORT:-8102}"
+PULP_API_HOST="${PULP_API_HOST:-0.0.0.0}"
+PULP_API_PORT="${PULP_API_PORT:-8000}"
+
+PULP_LOG_DIR="${PULP_LOG_DIR:-$LOG_DIR}"
+SOLVER_REQUEST_TIMEOUT="${SOLVER_REQUEST_TIMEOUT:-120}"
+HIGHS_THREADS="${HIGHS_THREADS:-4}"
+OMP_NUM_THREADS="${OMP_NUM_THREADS:-$HIGHS_THREADS}"
+DATABASE_URL="${DATABASE_URL:-}"
+
+CBC_PID_FILE="$RUN_DIR/pulp-solver-cbc.pid"
+HIGHS_PID_FILE="$RUN_DIR/pulp-solver-highs.pid"
+API_PID_FILE="$RUN_DIR/pulp-api.pid"
+
+CBC_STDOUT_LOG="$LOG_DIR/pulp-solver-cbc.out.log"
+HIGHS_STDOUT_LOG="$LOG_DIR/pulp-solver-highs.out.log"
+API_STDOUT_LOG="$LOG_DIR/pulp-api.out.log"
+
+usage() {
+  cat <<EOF
+Usage:
+  ./on-prem/run.linux.sh install
+  ./on-prem/run.linux.sh deploy
+  ./on-prem/run.linux.sh start-solvers
+  ./on-prem/run.linux.sh start-api
+  ./on-prem/run.linux.sh start-all
+  ./on-prem/run.linux.sh restart-all
+  ./on-prem/run.linux.sh stop-solvers
+  ./on-prem/run.linux.sh stop-api
+  ./on-prem/run.linux.sh stop-all
+  ./on-prem/run.linux.sh status
+  ./on-prem/run.linux.sh postgres-up
+  ./on-prem/run.linux.sh postgres-down
+  ./on-prem/run.linux.sh postgres-logs
+  ./on-prem/run.linux.sh postgres-ps
+
+Defaults:
+  env file: $ENV_FILE
+  postgres compose: $POSTGRES_COMPOSE_FILE
+EOF
+}
+
+is_running() {
+  local pid_file="$1"
+  if [[ ! -f "$pid_file" ]]; then
+    return 1
+  fi
+
+  local pid
+  pid="$(cat "$pid_file" 2>/dev/null || true)"
+  if [[ -z "$pid" ]]; then
+    return 1
+  fi
+
+  if kill -0 "$pid" 2>/dev/null; then
+    return 0
+  fi
+
+  rm -f "$pid_file"
+  return 1
+}
+
+require_runtime() {
+  if [[ ! -x "$PYTHON_BIN" ]]; then
+    echo "[error] Python runtime not found: $PYTHON_BIN"
+    echo "Run: ./on-prem/run.linux.sh install"
+    exit 1
+  fi
+}
+
+install_deps() {
+  if [[ ! -d "$VENV_DIR" ]]; then
+    python3 -m venv "$VENV_DIR"
+  fi
+  "$PIP_BIN" install --upgrade pip
+  "$PIP_BIN" install -r "$REPO_ROOT/requirements.txt"
+  echo "[ok] Installed dependencies into $VENV_DIR"
+}
+
+start_process() {
+  local name="$1"
+  local pid_file="$2"
+  local stdout_log="$3"
+  shift 3
+
+  if is_running "$pid_file"; then
+    echo "[skip] $name already running (pid=$(cat "$pid_file"))"
+    return 0
+  fi
+
+  nohup "$@" >>"$stdout_log" 2>&1 &
+  local pid=$!
+  echo "$pid" > "$pid_file"
+  sleep 1
+
+  if kill -0 "$pid" 2>/dev/null; then
+    echo "[ok] Started $name (pid=$pid)"
+  else
+    echo "[error] Failed to start $name. Check log: $stdout_log"
+    rm -f "$pid_file"
+    exit 1
+  fi
+}
+
+stop_process() {
+  local name="$1"
+  local pid_file="$2"
+
+  if ! is_running "$pid_file"; then
+    echo "[skip] $name is not running"
+    rm -f "$pid_file"
+    return 0
+  fi
+
+  local pid
+  pid="$(cat "$pid_file")"
+  kill "$pid" 2>/dev/null || true
+
+  for _ in $(seq 1 20); do
+    if ! kill -0 "$pid" 2>/dev/null; then
+      rm -f "$pid_file"
+      echo "[ok] Stopped $name"
+      return 0
+    fi
+    sleep 0.5
+  done
+
+  kill -9 "$pid" 2>/dev/null || true
+  rm -f "$pid_file"
+  echo "[ok] Force-stopped $name"
+}
+
+status_process() {
+  local name="$1"
+  local pid_file="$2"
+  local url="${3:-}"
+
+  if is_running "$pid_file"; then
+    local pid
+    pid="$(cat "$pid_file")"
+    printf "[running] %-18s pid=%s" "$name" "$pid"
+    if [[ -n "$url" ]] && command -v curl >/dev/null 2>&1; then
+      local code
+      code="$(curl -s -o /dev/null -w '%{http_code}' "$url" || true)"
+      printf " health=%s" "${code:-n/a}"
+    fi
+    printf "\n"
+  else
+    echo "[stopped] $name"
+  fi
+}
+
+docker_compose() {
+  local args=(-f "$POSTGRES_COMPOSE_FILE")
+  if [[ -f "$ENV_FILE" ]]; then
+    args=(--env-file "$ENV_FILE" "${args[@]}")
+  fi
+  docker compose "${args[@]}" "$@"
+}
+
+postgres_up() {
+  docker_compose up -d
+}
+
+postgres_down() {
+  docker_compose down
+}
+
+postgres_logs() {
+  docker_compose logs -f postgres
+}
+
+postgres_ps() {
+  docker_compose ps
+}
+
+start_solvers() {
+  require_runtime
+
+  start_process "pulp-solver-cbc" "$CBC_PID_FILE" "$CBC_STDOUT_LOG" \
+    env \
+      PYTHONPATH="$REPO_ROOT" \
+      SOLVER_NAME="CBC" \
+      PULP_LOG_DIR="$PULP_LOG_DIR" \
+      "$PYTHON_BIN" -m uvicorn app.connector_api.main:app \
+      --host "$CBC_HOST" --port "$CBC_PORT"
+
+  start_process "pulp-solver-highs" "$HIGHS_PID_FILE" "$HIGHS_STDOUT_LOG" \
+    env \
+      PYTHONPATH="$REPO_ROOT" \
+      SOLVER_NAME="HIGHS" \
+      HIGHS_THREADS="$HIGHS_THREADS" \
+      OMP_NUM_THREADS="$OMP_NUM_THREADS" \
+      PULP_LOG_DIR="$PULP_LOG_DIR" \
+      "$PYTHON_BIN" -m uvicorn app.connector_api.main:app \
+      --host "$HIGHS_HOST" --port "$HIGHS_PORT"
+}
+
+start_api() {
+  require_runtime
+
+  start_process "pulp-api" "$API_PID_FILE" "$API_STDOUT_LOG" \
+    env \
+      PYTHONPATH="$REPO_ROOT" \
+      CBC_SOLVER_URL="http://127.0.0.1:${CBC_PORT}/solve" \
+      HIGHS_SOLVER_URL="http://127.0.0.1:${HIGHS_PORT}/solve" \
+      CPLEX_SOLVER_URL="" \
+      SOLVER_REQUEST_TIMEOUT="$SOLVER_REQUEST_TIMEOUT" \
+      DATABASE_URL="$DATABASE_URL" \
+      PULP_LOG_DIR="$PULP_LOG_DIR" \
+      "$PYTHON_BIN" -m uvicorn app.api.main:app \
+      --host "$PULP_API_HOST" --port "$PULP_API_PORT"
+}
+
+stop_solvers() {
+  stop_process "pulp-solver-cbc" "$CBC_PID_FILE"
+  stop_process "pulp-solver-highs" "$HIGHS_PID_FILE"
+}
+
+stop_api() {
+  stop_process "pulp-api" "$API_PID_FILE"
+}
+
+status_all() {
+  status_process "pulp-solver-cbc" "$CBC_PID_FILE" "http://127.0.0.1:${CBC_PORT}/healthz"
+  status_process "pulp-solver-highs" "$HIGHS_PID_FILE" "http://127.0.0.1:${HIGHS_PORT}/healthz"
+  status_process "pulp-api" "$API_PID_FILE" "http://127.0.0.1:${PULP_API_PORT}/healthz"
+  if command -v docker >/dev/null 2>&1 && [[ -f "$POSTGRES_COMPOSE_FILE" ]]; then
+    echo "postgres:"
+    if ! docker_compose ps 2>/dev/null; then
+      echo "[warn] docker compose status unavailable"
+    fi
+  fi
+  echo "logs: $LOG_DIR"
+}
+
+deploy_all() {
+  echo "[info] Deploying current Python source from: $REPO_ROOT"
+  install_deps
+  stop_api
+  stop_solvers
+  start_solvers
+  start_api
+  status_all
+}
+
+restart_all() {
+  stop_api
+  stop_solvers
+  start_solvers
+  start_api
+  status_all
+}
+
+cmd="${1:-}"
+
+case "$cmd" in
+  install)
+    install_deps
+    ;;
+  deploy)
+    deploy_all
+    ;;
+  start-solvers)
+    start_solvers
+    ;;
+  start-api)
+    start_api
+    ;;
+  start-all)
+    start_solvers
+    start_api
+    ;;
+  stop-solvers)
+    stop_solvers
+    ;;
+  stop-api)
+    stop_api
+    ;;
+  stop-all)
+    stop_api
+    stop_solvers
+    ;;
+  restart-all)
+    restart_all
+    ;;
+  status)
+    status_all
+    ;;
+  postgres-up)
+    postgres_up
+    ;;
+  postgres-down)
+    postgres_down
+    ;;
+  postgres-logs)
+    postgres_logs
+    ;;
+  postgres-ps)
+    postgres_ps
+    ;;
+  ""|-h|--help|help)
+    usage
+    ;;
+  *)
+    echo "[error] Unknown command: $cmd"
+    usage
+    exit 1
+    ;;
+esac

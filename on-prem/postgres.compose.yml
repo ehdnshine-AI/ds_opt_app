@@ -1,0 +1,25 @@
+name: ds-opt-app-on-prem
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ds_opt_app}
+      POSTGRES_USER: ${POSTGRES_USER:-dsopt}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dsopt123}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../scripts/00.init.sql:/docker-entrypoint-initdb.d/00.init.sql:ro
+      - ../scripts/01.create_tables.sql:/docker-entrypoint-initdb.d/01-create_tables.sql:ro
+      - ../scripts/02.data_insert.sql:/docker-entrypoint-initdb.d/02-data_insert.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

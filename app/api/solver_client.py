@@ -38,7 +38,7 @@ def call_solver(solver_name: str, payload: dict[str, Any]) -> dict[str, Any]:
     if not url:
         raise SolverServiceError(f"solver URL not configured for {solver_name}")
 
-    timeout_sec = float(os.getenv("SOLVER_REQUEST_TIMEOUT", "30"))
+    timeout_sec = float(os.getenv("SOLVER_REQUEST_TIMEOUT", "300"))
     data = json.dumps(payload).encode("utf-8")
     req = request.Request(url, data=data, headers={"Content-Type": "application/json"})
 
