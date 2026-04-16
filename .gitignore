@@ -6,3 +6,4 @@ docker/.env
 .run/
 ./onprem/logs/
 ./onprem/.run/
+./Highs_test/*.json
