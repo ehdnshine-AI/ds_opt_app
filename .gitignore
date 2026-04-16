@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 docker/.env
 .run/
+./onprem/logs/
+./onprem/.run/
